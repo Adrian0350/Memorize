@@ -1,5 +1,5 @@
 // — View —
-//  ContentView.swift
+//  EmojiMemoryGameView.swift
 //  Memorize
 //
 //  Created by Jaime Zúñiga on 21/09/22.
@@ -7,17 +7,17 @@
 
 import SwiftUI
 
-struct ContentView: View {
-    @ObservedObject var viewModel: EmojiMemoryGame
+struct EmojiMemoryGameView: View {
+    @ObservedObject var game: EmojiMemoryGame
 
     var body: some View {
         VStack {
             ScrollView {
                 LazyVGrid(columns: [GridItem(.adaptive(minimum: 80))]) {
-                    ForEach(viewModel.cards) { card in
+                    ForEach(game.cards) { card in
                         CardView(card: card).aspectRatio(2/3, contentMode: .fit)
                             .onTapGesture {
-                                viewModel.choose(card)
+                                game.choose(card)
                             }
                     }
                 }
@@ -29,23 +29,18 @@ struct ContentView: View {
 }
 
 struct CardView: View {
-    let card: MemoryGame<String>.Card
+    let card: EmojiMemoryGame.Card
 
     var body: some View {
         ZStack {
             let shape = RoundedRectangle(cornerRadius: 10)
-            if card.isFaceUp
-            {
+            if card.isFaceUp {
                 shape.fill().foregroundColor(.white)
                 shape.strokeBorder(lineWidth: 3)
                 Text(card.content).font(.largeTitle)
-            }
-            else if card.isMatched
-            {
+            } else if card.isMatched {
                 shape.opacity(0)
-            }
-            else
-            {
+            } else {
                 shape.fill()
             }
         }
@@ -56,7 +51,7 @@ struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         let game = EmojiMemoryGame()
         
-        ContentView(viewModel: game).preferredColorScheme(.light)
-        ContentView(viewModel: game).preferredColorScheme(.dark)
+        EmojiMemoryGameView(game: game).preferredColorScheme(.light)
+        EmojiMemoryGameView(game: game).preferredColorScheme(.dark)
     }
 }
